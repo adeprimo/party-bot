@@ -36,9 +36,9 @@ bot.dialog('helpDialog', function (session) {
     session.endDialog("Okej... du vill ha min hjälp. Hur många vill du bjuda till festen? Skriv: 'Boka'... eller 'Hejdå' för att lämna mig :(");
 }).triggerAction({ matches: 'Hjälp' });
 
-// bot.dialog('bokaDialog', function (session) {
-//     session.endDialog("Hur många vill du att jag bjuder in?");
-// }).triggerAction({ matches: 'Boka' });
+bot.dialog('bokaDialog', function (session) {
+    session.beginDialog('ticketsDialog');
+}).triggerAction({ matches: 'Boka' });
 
 bot.dialog('okDialog', function (session) {
     session.endDialog("Du kan vara... ok!");
@@ -50,10 +50,19 @@ bot.dialog('ticketsDialog', [
         builder.Prompts.text(session, 'Hur många biljetter vill du reservera?');
     },
     function (session, results) {
-        console.log(results);
-        session.endDialog(`Perfekt! Nu har jag reserverat: ${results.response} biljetter`);
+        var amount = results.response;
+        var isNum = /^\d+$/.test(amount);
+        
+        if (isNum) {
+            session.endDialog(`Perfekt! Nu har jag reserverat: ${amount} biljetter`);
+        } else {
+            session.endDialog(`Mäh! ${amount} är ingen siffra... Inga problem, vi försöker igen!`);
+            session.beginDialog('ticketsDialog');
+        }
     }
-]).triggerAction({ matches: 'Boka' });
+]);
+
+
 
 bot.endConversationAction('goodbyeAction', "Okej... See you later aligator.", { matches: 'Hejdå' });
 
