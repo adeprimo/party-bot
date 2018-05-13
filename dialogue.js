@@ -1,12 +1,21 @@
-var introText = "Hej! Jag är PartyBoten, sugen på fest? Fråga då efter min Hjälp.";
 
-var otydligText = "Jag förstår inte vad du menar med: %s";
+// gränsnittet för kod under stationen
+// Frågorna fylls i under stationsaktivitet
+// TODO: bestäm startmallformat för stationen + konsekens och samma språk igenom denna sida + övriga förbättringar vi hinner med.
+//
+var introText = "Här skrivs en hälsning";
 
-var intents = [
-  {intent: 'hjälp', response: "Okej... du vill ha min hjälp. Hur många vill du bjuda till festen? Skriv: 'Boka'... eller 'Hejdå'"},
-  {intent: 'boka', response: "", action: "ticketsDialog"},
-  {intent: 'ok', response: "Du kan vara... ok!"},
-  {intent: 'hejdå', response: "Okej... See you later aligator."}
+var otydligText = "Här skrivs svar på okänd fråga %s";
+
+var intents = [{
+    intent: "enkel fråga",
+    response: "Direkt svar"
+  },
+  {
+    intent: "fråga med svar",
+    response: "Prompt för input",
+    action: (results) => `Svar med input: ${results.response}`
+  }
 ]
 
 module.exports = {

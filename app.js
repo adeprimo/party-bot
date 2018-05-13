@@ -24,7 +24,8 @@ var bot = new builder.UniversalBot(connector, function(session) {
 
 
 bot.on('conversationUpdate', function(message) {
-  if (message.membersAdded) {
+  if (message.membersAdded[0].name == 'Bot') {
+    console.log(message);
     const hello = new builder.Message()
       .address(message.address)
       .text(dialogue.introText);
@@ -33,37 +34,24 @@ bot.on('conversationUpdate', function(message) {
 });
 
 
-// Simple dialogues
 dialogue.intents.forEach(function(intentItem) {
-  bot.dialog(intentItem.intent + 'Dialog', function(session) {
-    if (intentItem.action) {
-      // Dialogue with waterfall
-      session.beginDialog(intentItem.action);
-    } else {
-      // Simple response dialogue
+  if (intentItem.action) {
+    // Question dialogue with value returned in response
+    bot.dialog(intentItem.intent + 'Dialog', [
+      function(session) {
+        builder.Prompts.text(session, intentItem.response)
+      },
+      function(session, results) {
+        session.endDialog(intentItem.action(results));
+      }
+    ]).triggerAction({ matches: intentItem.intent });
+  } else {
+    // Simple response dialogue.
+    bot.dialog(intentItem.intent + 'Dialog', function(session) {
       session.endDialog(intentItem.response);
-    }
-  }).triggerAction({ matches: intentItem.intent });
-});
-
-
-// Prompts
-bot.dialog('ticketsDialog', [
-  function(session) {
-    builder.Prompts.text(session, 'Hur många biljetter vill du reservera?');
-  },
-  function(session, results) {
-    var amount = results.response;
-    var isNum = /^\d+$/.test(amount);
-
-    if (isNum) {
-      session.endDialog(`Perfekt! Nu har jag reserverat: ${amount} biljetter`);
-    } else {
-      session.endDialog(`Mäh! ${amount} är ingen siffra... Inga problem, vi försöker igen!`);
-      session.beginDialog('ticketsDialog');
-    }
+    }).triggerAction({ matches: intentItem.intent });
   }
-]);
+});
 
 
 bot.recognizer({
