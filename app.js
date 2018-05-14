@@ -34,38 +34,38 @@ bot.on('conversationUpdate', function(message) {
 });
 
 
-dialogue.intents.forEach(function(intentItem) {
-  if (intentItem.action) {
+dialogue.fragor.forEach(function(fragaItem) {
+  if (fragaItem.action) {
     // Question dialogue with value returned in response
-    bot.dialog(intentItem.intent + 'Dialog', [
+    bot.dialog(fragaItem.fraga + 'Dialog', [
       function(session) {
-        builder.Prompts.text(session, intentItem.response)
+        builder.Prompts.text(session, fragaItem.svar)
       },
       function(session, results) {
-        session.endDialog(intentItem.action(results));
+        session.endDialog(fragaItem.action(results));
       }
-    ]).triggerAction({ matches: intentItem.intent });
+    ]).triggerAction({ matches: fragaItem.fraga });
   } else {
     // Simple response dialogue.
-    bot.dialog(intentItem.intent + 'Dialog', function(session) {
-      session.endDialog(intentItem.response);
-    }).triggerAction({ matches: intentItem.intent });
+    bot.dialog(fragaItem.fraga + 'Dialog', function(session) {
+      session.endDialog(fragaItem.svar);
+    }).triggerAction({ matches: fragaItem.fraga });
   }
 });
 
 
 bot.recognizer({
   recognize: function(context, done) {
-    var intent = { score: 0.0 };
+    var fraga = { score: 0.0 };
 
     if (context.message.text) {
-      dialogue.intents.forEach(function(intentItem) {
-        if (context.message.text.toLowerCase() === intentItem.intent) {
-          intent = { score: 1.0, intent: intentItem.intent };
+      dialogue.fragor.forEach(function(fragaItem) {
+        if (context.message.text.toLowerCase() === fragaItem.fraga) {
+          fraga = { score: 1.0, intent: fragaItem.fraga };
         }
       });
 
     }
-    done(null, intent);
+    done(null, fraga);
   }
 });

@@ -3,20 +3,20 @@
 // Frågorna fylls i under stationsaktivitet
 // TODO: bestäm startmallformat för stationen + konsekens och samma språk igenom denna sida + övriga förbättringar vi hinner med.
 
-var introText = "Här skrivs en hälsning";
-var otydligText = "Här skrivs svar på okänd fråga %s";
+var introText = "Hej";
+var otydligText = "Va?";
 
-var intents = [
+var fragor = [
 
   {
-    intent: "enkel fråga",
-    response: "Direkt svar"
+    fraga: "",
+    svar: ""
   },
 
   {
-    intent: "fråga med svar",
-    response: "Prompt för input",
-    action: (results) => `Svar med input: ${results.response}`
+    fraga: "a",
+    svar: "a",
+    action: (bot) => `Svar: ${bot.response}`
   }
 
 ];
@@ -24,5 +24,5 @@ var intents = [
 module.exports = {
   introText,
   otydligText,
-  intents
+  fragor
 };
